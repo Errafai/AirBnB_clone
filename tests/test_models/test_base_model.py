@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# !/usr/bin/python3
 """testing the base_model class"""
 
 
@@ -31,10 +31,10 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
     def test_created_at_attribute(self):
         self.assertTrue(hasattr(self.b1, "created_at"))
-        #self.assertIsInstance(self.b1, datetime)
+        # self.assertIsInstance(self.b1, datetime)
 
         self.assertTrue(hasattr(self.b2, "created_at"))
-        #self.assertIsInstance(self.b2.created_at, datetime)
+        # self.assertIsInstance(self.b2.created_at, datetime)
 
         self.assertNotEqual(self.b1.created_at, datetime.now())
         self.assertNotEqual(self.b2.created_at, datetime.now())
@@ -43,16 +43,16 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
     def test_updated_at_attribute(self):
         self.assertTrue(hasattr(self.b1, "updated_at"))
-        #self.assertIsInstance(self.b1, datetime)
+        # self.assertIsInstance(self.b1, datetime)
 
         self.assertTrue(hasattr(self.b2, "updated_at"))
-        #self.assertIsInstance(self.b2.updated_at, datetime)
+        # self.assertIsInstance(self.b2.updated_at, datetime)
 
         self.assertNotEqual(self.b1.updated_at, datetime.now())
         self.assertNotEqual(self.b2.updated_at, datetime.now())
 
-        #self.assertEqual(self.b1.updated_at, self.b1.created_at)
-        #self.assertEqual(self.b2.updated_at, self.b2.created_at)
+        # self.assertEqual(self.b1.updated_at, self.b1.created_at)
+        # self.assertEqual(self.b2.updated_at, self.b2.created_at)
 
         self.assertNotEqual(self.b1.updated_at, self.b2.created_at)
 
