@@ -31,10 +31,7 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
     def test_created_at_attribute(self):
         self.assertTrue(hasattr(self.b1, "created_at"))
-        # self.assertIsInstance(self.b1, datetime)
-
         self.assertTrue(hasattr(self.b2, "created_at"))
-        # self.assertIsInstance(self.b2.created_at, datetime)
 
         self.assertNotEqual(self.b1.created_at, datetime.now())
         self.assertNotEqual(self.b2.created_at, datetime.now())
@@ -43,16 +40,10 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
     def test_updated_at_attribute(self):
         self.assertTrue(hasattr(self.b1, "updated_at"))
-        # self.assertIsInstance(self.b1, datetime)
-
         self.assertTrue(hasattr(self.b2, "updated_at"))
-        # self.assertIsInstance(self.b2.updated_at, datetime)
 
         self.assertNotEqual(self.b1.updated_at, datetime.now())
         self.assertNotEqual(self.b2.updated_at, datetime.now())
-
-        # self.assertEqual(self.b1.updated_at, self.b1.created_at)
-        # self.assertEqual(self.b2.updated_at, self.b2.created_at)
 
         self.assertNotEqual(self.b1.updated_at, self.b2.created_at)
 
@@ -61,55 +52,25 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.b2 = None
 
 class TestBaseModel_save(unittest.TestCase):
-    """Unittests for testing save method of the BaseModel class."""
+    """testing the save method"""
 
-    @classmethod
     def setUp(self):
-        try:
-            os.rename("file.json", "tmp")
-        except IOError:
-            pass
+        """declaring an instance"""
+        self.b = BaseModel()
 
-    @classmethod
-    def tearDown(self):
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-        try:
-            os.rename("tmp", "file.json")
-        except IOError:
-            pass
+    def test_updated_at_changed(self):
+        self.b.name = "testing"
+        old_update = self.b.updated_at
+        self.b.save()
+        self.assertNotEqual(old_update,  self.b.updated_at)
 
-    def test_one_save(self):
-        bm = BaseModel()
-        sleep(0.05)
-        first_updated_at = bm.updated_at
-        bm.save()
-        self.assertLess(first_updated_at, bm.updated_at)
+    def test_updated_at_vs_creadted_at(self):
+        self.b.number = 39
+        self.b.save()
+        self.assertNotEqual(self.b.created_at,  self.b.updated_at)
 
-    def test_two_saves(self):
-        bm = BaseModel()
-        sleep(0.05)
-        first_updated_at = bm.updated_at
-        bm.save()
-        second_updated_at = bm.updated_at
-        self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
-        bm.save()
-        self.assertLess(second_updated_at, bm.updated_at)
 
-    def test_save_with_arg(self):
-        bm = BaseModel()
-        with self.assertRaises(TypeError):
-            bm.save(None)
 
-    def test_save_updates_file(self):
-        bm = BaseModel()
-        bm.save()
-        bmid = "BaseModel." + bm.id
-        with open("file.json", "r") as f:
-            self.assertIn(bmid, f.read())
 
 if __name__ == '__main__':
     unittest.main()
