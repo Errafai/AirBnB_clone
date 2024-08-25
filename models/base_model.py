@@ -17,7 +17,8 @@ class BaseModel:
 
     def __str__(self):
         """ return the class name and the its id with attributes"""
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, self.__class__)
+        return "[{}] ({}) {}".format(
+                type(self).__name__, self.id, self.__class__)
 
     def save(self):
         """update the update_at attribute when the instance is changed"""
