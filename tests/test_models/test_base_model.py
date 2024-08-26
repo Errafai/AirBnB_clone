@@ -45,7 +45,20 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.assertNotEqual(self.b1.updated_at, datetime.now())
         self.assertNotEqual(self.b2.updated_at, datetime.now())
 
+        self.assertEqual(self.b1.updated_at, self.b1.created_at)
+        self.assertEqual(self.b2.updated_at, self.b2.created_at)
+
         self.assertNotEqual(self.b1.updated_at, self.b2.created_at)
+
+    def test_the__str__method(self):
+        dt = datetime.today()
+        self.b1.id = '123930'
+        self.b1.created_at = self.b1.updated_at = dt
+        bstr = self.b1.__str__()
+        self.assertIn("[BaseModel] (123930)", bstr)
+        self.assertIn("'id': '123930'", bstr)
+        self.assertIn("'created_at': " + repr(dt), bstr)
+        self.assertIn("'updated_at': " + repr(dt), bstr)
 
     def tearDown(self):
         self.b1 = None
