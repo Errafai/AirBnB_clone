@@ -82,6 +82,47 @@ class TestBaseModel_save(unittest.TestCase):
         self.b.save()
         self.assertNotEqual(self.b.created_at,  self.b.updated_at)
 
+class TestBaseModel_to_dict(unittest.TestCase):
+    """testing the `to_dict()` method"""
+
+    def setUp(self):
+        """declaring an instance"""
+        self.b = BaseModel()
+
+    def test_it_return_a_dict(self):
+        """checking if the returnr of the method is a dict"""
+        self.assertIsInstance(self.b.to_dict(), dict)
+
+    def test_attributes_in_dict(self):
+        """testing some attributes if they exist in the dict"""
+        dict_attr = self.b.to_dict()
+        self.assertIn("__class__", dict_attr)
+        self.assertIn("created_at", dict_attr)
+        self.assertIn("updated_at", dict_attr)
+        self.assertIn("id", dict_attr)
+
+    def test_example_of_dict(self):
+        self.b.name = "My First Model"
+        self.b.my_number = 89
+        self.b.save()
+        dict_attr = self.b.to_dict()
+        self.assertIn("my_number", dict_attr)
+        self.assertEqual(dict_attr["my_number"], 89)
+        self.assertIn("name", dict_attr)
+        self.assertIn(dict_attr["name"], "My First Model")
+
+    def test_isofomat_of_time(self):
+        """checking if the `created_at` and `updated_at` attr
+        are in isofomat inside the dict"""
+        dict_attr = self.b.to_dict().copy()
+        created = dict_attr["created_at"]
+        self.b.save()
+        updated = dict_attr["updated_at"]
+
+        self.assertIsInstance(created, str)
+        self.assertIsInstance(updated, str)
+        self.assertRegex(created, r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?$')
+        self.assertRegex(updated, r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?$')
 
 
 
