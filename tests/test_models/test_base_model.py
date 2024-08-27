@@ -60,6 +60,18 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.assertIn("'created_at': " + repr(dt), bstr)
         self.assertIn("'updated_at': " + repr(dt), bstr)
 
+    def test_kwarg(self):
+        self.b1.name = "my kwargs"
+        self.b1.number = 32
+        dict_attr = self.b1.to_dict()
+        b = BaseModel(**dict_attr)
+        dict_attr2 = b.to_dict()
+        self.assertIn("name", dict_attr2)
+        self.assertIn("number", dict_attr2)
+        self.assertDictEqual(dict_attr, dict_attr2)
+        #self.assertIsInstance(dict_attr["created_at"], datetime)
+        #self.assertIsInstance(dict_attr["updated_at"], datetime)
+
     def tearDown(self):
         self.b1 = None
         self.b2 = None
