@@ -35,7 +35,7 @@ class BaseModel:
     def save(self):
         """update the update_at attribute when the instance is changed"""
 
-        self.updated_at = datetime.today().isoformat()
+        self.updated_at = datetime.today()
         storage.save()
 
     def to_dict(self):
