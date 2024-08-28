@@ -4,7 +4,7 @@
 
 from datetime import datetime
 import uuid
-from . import storage
+import models
 
 
 class BaseModel:
@@ -12,11 +12,11 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """inistantation of the id and the time of the creation of the instance"""
-        args = None
+        self.created_at = self.updated_at = datetime.today()
+        self.id = str(uuid.uuid4())
+        tform = "%Y-%m-%dT%H:%M:%S.%f"
         if kwargs is None or len(kwargs) == 0 :
-             self.id = str(uuid.uuid4())
-             self.created_at = self.updated_at = datetime.today()
-             storage.new(self)
+             models.storage.new(self)
         else:
             for key, value in kwargs.items():
 
@@ -24,7 +24,7 @@ class BaseModel:
                     continue
 
                 if key == "created_at" or key == "updated_at":
-                    value = datetime.fromisoformat(value)
+                    value = datetime.strptime(value, tform)
                 setattr(self, key, value)
 
     def __str__(self):
@@ -36,7 +36,7 @@ class BaseModel:
         """update the update_at attribute when the instance is changed"""
 
         self.updated_at = datetime.today()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """return a dictinary containing all key/value in the __dict__

@@ -2,6 +2,7 @@
 """this moudle define the FileStorage class"""
 
 
+from models.base_model import BaseModel
 import json
 
 class FileStorage:
@@ -21,24 +22,24 @@ class FileStorage:
     def new(self, obj):
         """add the new obj to the objects dict"""
         obj_id = obj.__class__.__name__ + "." + obj.id
-        obj_dict = obj.to_dict()
-        print(obj_dict)
-
-        self.__objects[obj_id] = obj_dict
+        self.__objects[obj_id] = obj
 
     def save(self):
         """serializes objects to the JSON file"""
+        cls_objs = self.__objects
+        objs_to_dict = {obj: cls_objs[obj].to_dict() for obj in cls_objs.keys()}
         with open(self.__file_path, "w") as jfile:
-            json.dump(self.__objects, jfile)
+            json.dump(objs_to_dict, jfile)
 
     def reload(self):
         """deserializes the JSON file to objects"""
         try:
             with open(self.__file_path, "r") as jfile:
-                try:
-                    self.__objects = json.load(jfile)
-                except Exception:
-                    pass
+                    inst_objs = json.load(jfile)
+                    for key, value in inst_objs.items():
+                        new_obj = eval(value["__class__"])(**value)
+                        self.new(new_obj)
+
         except FileNotFoundError:
             pass
 
