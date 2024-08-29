@@ -5,6 +5,7 @@
 from models.base_model import BaseModel
 import json
 
+
 class FileStorage:
     """represent the FileStorage class:
     Attrs:
@@ -27,7 +28,7 @@ class FileStorage:
     def save(self):
         """serializes objects to the JSON file"""
         cls_objs = self.__objects
-        objs_to_dict = {obj: cls_objs[obj].to_dict() for obj in cls_objs.keys()}
+        objs_to_dict = {ob: cls_objs[ob].to_dict() for ob in cls_objs.keys()}
         with open(self.__file_path, "w") as jfile:
             json.dump(objs_to_dict, jfile)
 
@@ -35,12 +36,12 @@ class FileStorage:
         """deserializes the JSON file to objects"""
         try:
             with open(self.__file_path, "r") as jfile:
-                    inst_objs = json.load(jfile)
-                    for key, value in inst_objs.items():
-                        new_obj = eval(value["__class__"])(**value)
-                        self.new(new_obj)
+                inst_objs = json.load(jfile)
+                for value in inst_objs.values():
+                    cls_obj = value["__class__"]
+                    del value["__class__"]
+                    new_obj = eval(cls_obj)(**value)
+                    self.new(new_obj)
 
         except FileNotFoundError:
             pass
-
-
