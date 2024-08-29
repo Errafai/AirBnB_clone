@@ -1,16 +1,24 @@
 #!/usr/bin/python3
-from models import storage
+"""testing the FileStorage class"""
+
+
+import os
+import json
+import models
+import unittest
+from datetime import datetime
 from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
 
-all_objs = storage.all()
-print("-- Reloaded objects --")
-for obj_id in all_objs.keys():
-    obj = all_objs[obj_id]
-    print(obj)
-
-print("-- Create a new object --")
-my_model = BaseModel()
-my_model.name = "My_First_Model"
-my_model.my_number = 89
-my_model.save()
-print(my_model)
+class TestFileStorage_instantation(unittest.TestCase):
+    def test_no_args(self):
+        self.assertEqual(type(FileStorage()), FileStorage)
+    def test_with_args(self):
+        with self.assertRaises(TypeError):
+            FileStorage("kdk")
+    def test_file_path_is_private(self):
+        self.assertEqual(str, type(FileStorage._FileStorage__file_path))
+    def test__object_is_private(self):
+        self.assertEqual(dict, type(FileStorage._FileStorage__objects))
+    def test_storage_instance(self):
+        self.assertIsInstance(models.storage, FileStorage)
