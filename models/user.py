@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """here we have the User class"""
-from models import storage
 from models.base_model import BaseModel
 
 
