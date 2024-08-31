@@ -63,7 +63,7 @@ class HBNBCommand(cmd.Cmd):
             except IndexError:
                 print("** no instance found **")
 
-    def do_distroy(self, arg):
+    def do_destroy(self, arg):
         """delete an instance using the id and
         save changes to the json file"""
         arg = arg.split()
