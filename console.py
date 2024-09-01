@@ -17,6 +17,27 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
+    def default(self, line):
+        """handle command that are not exist"""
+        argdict = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "count": self.do_count,
+            "update": self.do_update
+        }
+        if "." in line:
+            line = line.split(".")
+            method = line[1].split("(")[0]
+            method_arg = line[1].split("(")[1].split(")")[0]
+            if method_arg is None or len(method_arg) == 0:
+                return argdict[method](line[0])
+            else:
+                args = line[0] + " " + method_arg
+                return argdict[method](args)
+        else:
+            return False
+
     def do_quit(self, arg):
         """the command exist from the (hbnb) cmd"""
         return True
@@ -93,12 +114,16 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """print a list of all str representation
         of all instances of the class"""
-
-        if len(arg) == 0 or arg in globals():
+        arg = arg.split()
+        if len(arg) == 0 :
             obj = storage.all()
             list_insts = [obj[i].__str__() for i in obj]
             print(list_insts)
-        elif arg not in globals():
+        elif arg[0] in globals():
+            obj = storage.all()
+            list_insts = [obj[i].__str__() for i in obj if arg[0] in i]
+            print(list_insts)
+        elif arg[0] not in globals():
             print("** class doesn't exist **")
 
     def do_update(self, arg):
@@ -125,6 +150,18 @@ class HBNBCommand(cmd.Cmd):
                 setattr(obj[inst_id], arg[2], eval(arg[3]))
                 storage.save()
 
+    def do_count(self, line):
+        """show all instance of a speefic class"""
+        line = line.split()
+        if line[0] not in globals():
+            print("** class doesn't exist **")
+        else:
+            obj = storage.all()
+            i = 0
+            for k in obj.keys():
+                if line[0] in k:
+                    i += 1
+            print(i)
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
